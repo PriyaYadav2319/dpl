@@ -1,0 +1,410 @@
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from tensorflow.keras.datasets import mnist, fashion_mnist, cifar10
+
+# Load datasets
+def load_data():
+    (x_train_mnist, y_train_mnist), (x_test_mnist, y_test_mnist) = mnist.load_data()
+    (x_train_fashion, y_train_fashion), (x_test_fashion, y_test_fashion) = fashion_mnist.load_data()
+    (x_train_cifar, y_train_cifar), (x_test_cifar, y_test_cifar) = cifar10.load_data()
+    
+    x_train_mnist, x_test_mnist = x_train_mnist / 255.0, x_test_mnist / 255.0
+    x_train_fashion, x_test_fashion = x_train_fashion / 255.0, x_test_fashion / 255.0
+    x_train_cifar, x_test_cifar = x_train_cifar / 255.0, x_test_cifar / 255.0
+    
+    return (x_train_mnist, y_train_mnist, x_test_mnist, y_test_mnist), \
+           (x_train_fashion, y_train_fashion, x_test_fashion, y_test_fashion), \
+           (x_train_cifar, y_train_cifar, x_test_cifar, y_test_cifar)
+
+# Define Simple Neural Network
+def create_simple_nn(input_shape, num_classes):
+    model = keras.Sequential([
+        layers.Flatten(input_shape=input_shape),
+        layers.Dense(128, activation='relu'),
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+# Train and evaluate models
+def train_and_evaluate_model(dataset, dataset_name):
+    x_train, y_train, x_test, y_test = dataset
+    model = create_simple_nn(x_train.shape[1:], len(np.unique(y_train)))
+    history = model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test), verbose=2)
+    test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
+    print(f'Accuracy on {dataset_name}: {test_acc:.4f}')
+    plot_training_history(history, dataset_name)
+    return model, x_test, y_test
+
+# Plot training history
+def plot_training_history(history, dataset_name):
+    plt.figure(figsize=(12, 4))
+    
+    # Accuracy plot
+    plt.subplot(1, 2, 1)
+    plt.plot(history.history['accuracy'], label='Train Accuracy')
+    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.title(f'{dataset_name} - Accuracy')
+    
+    # Loss plot
+    plt.subplot(1, 2, 2)
+    plt.plot(history.history['loss'], label='Train Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.title(f'{dataset_name} - Loss')
+    
+    plt.show()
+
+# Load datasets
+datasets = load_data()
+dataset_names = ["MNIST", "Fashion MNIST", "CIFAR-10"]
+models = []
+
+# Train models on all datasets
+for dataset, name in zip(datasets, dataset_names):
+    model, x_test, y_test = train_and_evaluate_model(dataset, name)
+    models.append((model, x_test, y_test))
+
+# Option A: Adding Dropout Layer
+def create_nn_with_dropout(input_shape, num_classes):
+    model = keras.Sequential([
+        layers.Flatten(input_shape=input_shape),
+        layers.Dense(128, activation='relu'),
+        layers.Dropout(0.5),  # Dropout layer added
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+# Train and compare dropout model on MNIST
+print("\nTraining model with Dropout on MNIST...")
+dropout_model = create_nn_with_dropout(datasets[0][0].shape[1:], 10)
+history_dropout = dropout_model.fit(datasets[0][0], datasets[0][1], epochs=5, verbose=2, validation_data=(datasets[0][2], datasets[0][3]))
+dropout_acc = dropout_model.evaluate(datasets[0][2], datasets[0][3], verbose=0)[1]
+print(f'Accuracy with Dropout on MNIST: {dropout_acc:.4f}')
+plot_training_history(history_dropout, "MNIST with Dropout")
+
+# Option B: Model Evaluation Metrics
+def evaluate_model_metrics(model, x_test, y_test):
+    y_pred = np.argmax(model.predict(x_test), axis=1)
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, average='weighted')
+    recall = recall_score(y_test, y_pred, average='weighted')
+    f1 = f1_score(y_test, y_pred, average='weighted')
+    
+    print(f'Accuracy: {accuracy:.4f}')
+    print(f'Precision: {precision:.4f}')
+    print(f'Recall: {recall:.4f}')
+    print(f'F1 Score: {f1:.4f}')
+
+print("\nEvaluating Model Metrics on MNIST...")
+evaluate_model_metrics(models[0][0], models[0][1], models[0][2])
+
+# Save and reload model
+models[0][0].save("mnist_model.h5")
+reloaded_model = keras.models.load_model("mnist_model.h5")
+print("Reloaded model successfully!")
+
+
+------------------------------------------------------------------------------------------------
+
+
+
+
+#Q1
+# Import necessary libraries
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Step 1: Load the MNIST dataset
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+# Step 2: Preprocess the data
+x_train, x_test = x_train / 255.0, x_test / 255.0  # Normalize pixel values
+x_train = x_train.reshape(-1, 784)  # Flatten images
+x_test = x_test.reshape(-1, 784)
+
+# Step 3: Define a simple ANN model
+model = keras.Sequential([
+    keras.layers.Dense(128, activation='relu', input_shape=(784,)),  # Hidden layer
+    keras.layers.Dense(10, activation='softmax')  # Output layer
+])
+
+# Step 4: Compile the model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Step 5: Train the model
+history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+
+# Step 6: Evaluate the model on the test set
+test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
+
+# Print the test accuracy
+print(f"Test Accuracy: {test_acc:.4f}")
+ 
+ 
+ 
+ 
+ 
+ # Function to create a model (with or without dropout)
+def create_model(use_dropout=False):
+    model = keras.Sequential()
+    model.add(keras.layers.Dense(128, activation='relu', input_shape=(784,)))  # Hidden layer
+    if use_dropout:
+        model.add(keras.layers.Dropout(0.2))  # Apply Dropout if specified
+    model.add(keras.layers.Dense(10, activation='softmax'))  # Output layer
+
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
+    return model
+
+# Train the model WITHOUT dropout
+model_no_dropout = create_model(use_dropout=False)
+history_no_dropout = model_no_dropout.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+
+# Train the model WITH dropout
+model_with_dropout = create_model(use_dropout=True)
+history_with_dropout = model_with_dropout.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+
+# Evaluate both models on test data
+test_loss_no_dropout, test_acc_no_dropout = model_no_dropout.evaluate(x_test, y_test, verbose=2)
+test_loss_with_dropout, test_acc_with_dropout = model_with_dropout.evaluate(x_test, y_test, verbose=2)
+
+# Print comparison of test accuracy
+print(f"Test Accuracy WITHOUT Dropout: {test_acc_no_dropout:.4f}")
+print(f"Test Accuracy WITH Dropout (0.2): {test_acc_with_dropout:.4f}")
+
+# Plot accuracy comparison
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 4))
+
+# Accuracy comparison plot
+plt.subplot(1, 2, 1)
+plt.plot(history_no_dropout.history['val_accuracy'], label='No Dropout')
+plt.plot(history_with_dropout.history['val_accuracy'], label='With Dropout')
+plt.xlabel('Epochs')
+plt.ylabel('Test Accuracy')
+plt.legend()
+plt.title('Test Accuracy Comparison')
+
+# Loss comparison plot
+plt.subplot(1, 2, 2)
+plt.plot(history_no_dropout.history['val_loss'], label='No Dropout')
+plt.plot(history_with_dropout.history['val_loss'], label='With Dropout')
+plt.xlabel('Epochs')
+plt.ylabel('Test Loss')
+plt.legend()
+plt.title('Test Loss Comparison')
+
+plt.show()
+
+#(Test Accuracy:
+
+#The model with dropout (98.03%) performs slightly better than the model without dropout (97.91%).
+#Dropout helps prevent overfitting, which may have improved generalization.
+
+#Loss:
+
+#The lower loss (0.0681) for the dropout model indicates better optimization.
+
+#A higher loss (0.0739) in the non-dropout model suggests possible overfitting.)
+
+#Q1 2 - b
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import joblib
+
+# Step 1: Train the model (using previous trained model)
+model = keras.Sequential([
+    keras.layers.Dense(128, activation='relu', input_shape=(784,)),  # Hidden layer
+    keras.layers.Dense(10, activation='softmax')  # Output layer
+])
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+
+# Step 2: Make predictions
+y_pred = model.predict(x_test)
+y_pred_classes = np.argmax(y_pred, axis=1)  # Convert probabilities to class labels
+
+# Step 3: Compute accuracy, precision, recall, and F1-score
+accuracy = accuracy_score(y_test, y_pred_classes)
+precision = precision_score(y_test, y_pred_classes, average='weighted')
+recall = recall_score(y_test, y_pred_classes, average='weighted')
+f1 = f1_score(y_test, y_pred_classes, average='weighted')
+
+
+
+
+
+# Print the metrics in a structured format
+print("="*40)
+print("|   Metric      |   Value    |")
+print("="*40)
+print(f"| Accuracy      |   {accuracy:.4f}   |")
+print(f"| Precision     |   {precision:.4f}   |")
+print(f"| Recall        |   {recall:.4f}   |")
+print(f"| F1 Score      |   {f1:.4f}   |")
+print("="*40)
+
+
+
+
+
+#Accuracy (97.93%): The model correctly predicts the digit in 97.93% of test cases.
+
+#Precision (97.94%): When the model predicts a digit, 97.94% of those predictions are correct.
+
+#Recall (97.93%): The model correctly identifies 97.93% of all actual digits.
+
+#F1 Score (97.93%): A balanced measure confirming high precision and recal
+
+
+---------------------------------------------------------------------------------------------------------
+
+
+
+# Build CNN Model for Image Classification
+def create_cnn_model(input_shape, num_classes):
+    model = keras.Sequential([
+        layers.Conv2D(32, (3,3), activation='relu', input_shape=input_shape),
+        layers.MaxPooling2D((2,2)),
+        layers.Conv2D(64, (3,3), activation='relu'),
+        layers.MaxPooling2D((2,2)),
+        layers.Conv2D(128, (3,3), activation='relu'),
+        layers.MaxPooling2D((2,2)),
+        layers.Flatten(),
+        layers.Dense(128, activation='relu'),
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+# CNN Model for Flowers dataset
+print("\nBuilding CNN Model for Oxford-IIIT Pets...")
+(x_train_pets, y_train_pets), (x_test_pets, y_test_pets) = tf.keras.datasets.cifar10.load_data()
+cnn_model = create_cnn_model((32, 32, 3), 10)
+cnn_model.fit(x_train_pets, y_train_pets, epochs=5, validation_data=(x_test_pets, y_test_pets), verbose=2)
+
+# Hyperparameter Tuning on IRIS
+def tune_hyperparameters():
+    from sklearn.model_selection import GridSearchCV
+    from sklearn.svm import SVC
+    from sklearn.datasets import load_iris
+
+    iris = load_iris()
+    X, y = iris.data, iris.target
+    params = {'C': [0.1, 1, 10], 'gamma': [0.001, 0.01, 0.1]}
+    grid = GridSearchCV(SVC(), params, cv=3)
+    grid.fit(X, y)
+    print(f'Best Params: {grid.best_params_}')
+
+tune_hyperparameters()
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from tensorflow.keras.preprocessing import image_dataset_from_directory
+from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
+from sklearn.datasets import load_iris
+
+# Load Oxford-IIIT Pets dataset
+def load_pets_data(batch_size=32, img_size=(128, 128)):
+    train_dataset = image_dataset_from_directory(
+        "oxford_iiit_pet/train",  # Adjust path accordingly
+        image_size=img_size,
+        batch_size=batch_size,
+        label_mode="int"
+    )
+    test_dataset = image_dataset_from_directory(
+        "oxford_iiit_pet/test",  # Adjust path accordingly
+        image_size=img_size,
+        batch_size=batch_size,
+        label_mode="int"
+    )
+    return train_dataset, test_dataset
+
+# Define CNN Model for Image Classification
+def create_cnn_model(input_shape, num_classes):
+    model = keras.Sequential([
+        layers.Conv2D(32, (3,3), activation='relu', input_shape=input_shape),
+        layers.MaxPooling2D((2,2)),
+        layers.Conv2D(64, (3,3), activation='relu'),
+        layers.MaxPooling2D((2,2)),
+        layers.Conv2D(128, (3,3), activation='relu'),
+        layers.MaxPooling2D((2,2)),
+        layers.Flatten(),
+        layers.Dense(128, activation='relu'),
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+# Train CNN Model on Oxford-IIIT Pets dataset
+print("\nBuilding CNN Model for Oxford-IIIT Pets...")
+train_dataset, test_dataset = load_pets_data()
+cnn_model = create_cnn_model((128, 128, 3), 37)  # 37 classes in Oxford-IIIT Pets dataset
+history_cnn = cnn_model.fit(train_dataset, epochs=5, validation_data=test_dataset, verbose=2)
+
+def plot_cnn_training(history):
+    plt.figure(figsize=(12, 4))
+    
+    # Accuracy plot
+    plt.subplot(1, 2, 1)
+    plt.plot(history.history['accuracy'], label='Train Accuracy')
+    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.title('CNN Model - Accuracy')
+    
+    # Loss plot
+    plt.subplot(1, 2, 2)
+    plt.plot(history.history['loss'], label='Train Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.title('CNN Model - Loss')
+    
+    plt.show()
+
+plot_cnn_training(history_cnn)
+
+# Hyperparameter Tuning on IRIS
+def tune_hyperparameters():
+    iris = load_iris()
+    X, y = iris.data, iris.target
+    params = {'C': [0.1, 1, 10], 'gamma': [0.001, 0.01, 0.1]}
+    grid = GridSearchCV(SVC(), params, cv=3)
+    grid.fit(X, y)
+    print(f'Best Params: {grid.best_params_}')
+
+tune_hyperparameters()
+
+      
