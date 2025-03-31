@@ -1,3 +1,4 @@
+#Q1  Impo
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -321,33 +322,35 @@ tune_hyperparameters()
 
 
 ------------------------------------------------------------------------------------------------------------------------
+#Q2 : CNN (Ooxford IIIT Pets)
+
 
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import seaborn as sns
+import pandas as pd
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from tensorflow.keras.preprocessing import image_dataset_from_directory
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
 from sklearn.datasets import load_iris
+import tensorflow_datasets as tfds
 
-# Load Oxford-IIIT Pets dataset
+# Load Oxford-IIIT Pets dataset from TensorFlow Datasets
 def load_pets_data(batch_size=32, img_size=(128, 128)):
-    train_dataset = image_dataset_from_directory(
-        "oxford_iiit_pet/train",  # Adjust path accordingly
-        image_size=img_size,
-        batch_size=batch_size,
-        label_mode="int"
-    )
-    test_dataset = image_dataset_from_directory(
-        "oxford_iiit_pet/test",  # Adjust path accordingly
-        image_size=img_size,
-        batch_size=batch_size,
-        label_mode="int"
-    )
-    return train_dataset, test_dataset
+    dataset_name = "oxford_iiit_pet"
+    dataset, info = tfds.load(dataset_name, split='train', as_supervised=True, with_info=True)
+    
+    # Resize images to a consistent size
+    def resize_image(image, label):
+        image = tf.image.resize(image, img_size)
+        return image, label
+    
+    dataset = dataset.map(resize_image)  # Apply resize function to the dataset
+    return dataset
 
 # Define CNN Model for Image Classification
 def create_cnn_model(input_shape, num_classes):
@@ -367,9 +370,77 @@ def create_cnn_model(input_shape, num_classes):
 
 # Train CNN Model on Oxford-IIIT Pets dataset
 print("\nBuilding CNN Model for Oxford-IIIT Pets...")
-train_dataset, test_dataset = load_pets_data()
+train_dataset = load_pets_data()
 cnn_model = create_cnn_model((128, 128, 3), 37)  # 37 classes in Oxford-IIIT Pets dataset
-history_cnn = cnn_model.fit(train_dataset, epochs=5, validation_data=test_dataset, verbose=2)
+history_cnn = cnn_model.fit(train_dataset.batch(32), epochs=10, verbose=2)
+
+def plot_cnn_training(history):
+    plt.figure(figsize=(12, 4))
+    
+    # Accuracy plot
+    plt.subplot(1, 2, 1)
+    plt.plot(history.history['accuracy'], label='Train Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.title('CNN Model - Accuracy')
+    
+    # Loss plot
+    plt.subplot(1, 2, 2)
+    plt.plot(history.history['loss'], label='Train Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.title('CNN Model - Loss')
+    
+    plt.show()
+
+plot_cnn_training(history_cnn)
+
+
+
+---------------------------------------------------------------------------------------------------------------
+# Q2 CNN (tf_Flowers)
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import tensorflow_datasets as tfds
+
+# Load TensorFlow Flowers dataset from TensorFlow Datasets
+def load_flowers_data(batch_size=32, img_size=(128, 128)):
+    dataset_name = "tf_flowers"
+    (train_dataset, test_dataset), info = tfds.load(dataset_name, 
+                                                     as_supervised=True, 
+                                                     with_info=True, 
+                                                     split=["train[:80%]", "train[80%:]"])
+    return train_dataset, test_dataset
+
+# Define CNN Model for Image Classification
+def create_cnn_model(input_shape, num_classes):
+    model = keras.Sequential([
+        layers.Conv2D(32, (3,3), activation='relu', input_shape=input_shape),
+        layers.MaxPooling2D((2,2)),
+        layers.Conv2D(64, (3,3), activation='relu'),
+        layers.MaxPooling2D((2,2)),
+        layers.Conv2D(128, (3,3), activation='relu'),
+        layers.MaxPooling2D((2,2)),
+        layers.Flatten(),
+        layers.Dense(128, activation='relu'),
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+# Train CNN Model on TensorFlow Flowers dataset
+print("\nBuilding CNN Model for TensorFlow Flowers...")
+train_dataset, test_dataset = load_flowers_data()
+cnn_model = create_cnn_model((128, 128, 3), 5)  # 5 classes in TensorFlow Flowers dataset
+history_cnn = cnn_model.fit(train_dataset.batch(32), epochs=10, validation_data=test_dataset.batch(32), verbose=2)
 
 def plot_cnn_training(history):
     plt.figure(figsize=(12, 4))
@@ -396,15 +467,59 @@ def plot_cnn_training(history):
 
 plot_cnn_training(history_cnn)
 
-# Hyperparameter Tuning on IRIS
+
+
+------------------------------------------------------------------------------------------------------------------
+
+Q2 : Hyperparameter tunning
+
+# Hyperparameter Tuning on IRIS with EDA and Confusion Matrix
+import pandas as pd
+import seaborn as sns 
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix # Import confusion_matrix
+
 def tune_hyperparameters():
     iris = load_iris()
     X, y = iris.data, iris.target
+    iris_df = pd.DataFrame(X, columns=iris.feature_names)
+    iris_df['target'] = y
+    
+    # EDA
+    print("Dataset Head:")
+    print(iris_df.head())
+    print("\nSummary Statistics:")
+    print(iris_df.describe())
+    print("\nClass Distribution:")
+    print(iris_df['target'].value_counts())
+    
+    # Pairplot
+    sns.pairplot(iris_df, hue='target', palette='husl')
+    plt.show()
+    
+    # Hyperparameter tuning
     params = {'C': [0.1, 1, 10], 'gamma': [0.001, 0.01, 0.1]}
     grid = GridSearchCV(SVC(), params, cv=3)
     grid.fit(X, y)
     print(f'Best Params: {grid.best_params_}')
+    
+    # Model evaluation
+    best_model = grid.best_estimator_
+    y_pred = best_model.predict(X)
+    acc = accuracy_score(y, y_pred)
+    prec = precision_score(y, y_pred, average='macro')
+    rec = recall_score(y, y_pred, average='macro')
+    f1 = f1_score(y, y_pred, average='macro')
+    
+    print(f'Accuracy: {acc:.4f}, Precision: {prec:.4f}, Recall: {rec:.4f}, F1-score: {f1:.4f}')
+    
+    # Confusion Matrix
+    cm = confusion_matrix(y, y_pred)
+    plt.figure(figsize=(6, 4))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.title('Confusion Matrix')
+    plt.show()
 
 tune_hyperparameters()
-
       
