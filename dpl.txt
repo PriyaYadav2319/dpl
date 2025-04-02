@@ -1,525 +1,319 @@
-#Q1  Impo
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from tensorflow.keras.datasets import mnist, fashion_mnist, cifar10
+Q1
+Amazon S3 Buckets – Detailed Explanation
+1.	What is an S3 Bucket?
+o	A bucket in Amazon S3 (Simple Storage Service) is a storage container where you can store objects (files, data, images, backups, etc.).
+o	It acts like a folder, but with global access and high durability.
+2.	How Many Buckets Can You Create?
+o	By default, AWS allows 100 buckets per account.
+o	You can request an increase if needed by contacting AWS Support.
+o	The limit applies to each AWS region separately.
+3.	Naming Rules for Buckets
+o	Bucket names must be globally unique across all AWS accounts.
+o	Allowed: Lowercase letters, numbers, dots, and hyphens.
+o	Not allowed: Uppercase letters, underscores, or special characters.
+o	Example of a valid bucket name: "my-app-logs-2024"
+4.	Types of S3 Storage Classes
+o	S3 Standard: Default, high availability, low latency.
+o	S3 Intelligent-Tiering: Auto-moves data between Standard and Infrequent Access to optimize costs.
+o	S3 Standard-IA (Infrequent Access): Lower cost but retrieval fees apply.
+o	S3 One Zone-IA: Cheaper but stores data in a single AWS region.
+o	S3 Glacier: Used for long-term archival (retrieval takes minutes to hours).
+o	S3 Glacier Deep Archive: Cheapest, for data rarely accessed.
+5.	Bucket Access Control
+o	Public or Private: Buckets are private by default to prevent unauthorized access.
+o	Bucket Policies: Set rules for who can read/write data.
+o	IAM Permissions: Define which AWS users or roles can access the bucket.
+6.	Data Durability and Availability
+o	S3 offers 99.999999999% (11 nines) durability—meaning data loss is highly unlikely.
+o	Availability varies by storage class (Standard: 99.99%, IA: 99.9%).
+7.	Object Versioning
+o	Helps keep track of changes to files.
+o	Allows restoring previous versions if data is modified or deleted accidentally.
+8.	Lifecycle Management
+o	You can automatically move objects to different storage classes or delete them after a set period.
+o	Example: Move files to Glacier after 30 days for cost savings.
+9.	Encryption for Security
+o	S3 supports Server-Side Encryption (SSE) with AWS-managed keys (SSE-S3) or Customer-Managed Keys (SSE-KMS).
+o	Also supports Client-Side Encryption before uploading files.
+10.	 Your Case: 6 Buckets in Amazon S3
+•	If you have 6 buckets, you might be using them for different purposes, such as:
+o	Logs and analytics storage
+o	Website hosting
+o	Backup and archival
+o	Machine learning datasets
+o	Application file storage
+Q2 
+Standard Bucket in Amazon S3 – Detailed Explanation
+1.	What is a Standard Bucket in Amazon S3?
+o	A Standard bucket refers to an S3 bucket using the S3 Standard storage class (default option).
+o	It provides high durability, availability, and low-latency access to stored objects.
+2.	Key Features of an S3 Standard Bucket:
+ High Durability: 99.999999999% (11 nines) data durability—ensures minimal risk of data loss.
+ High Availability: 99.99% availability across multiple AWS Availability Zones.
+ Low Latency & High Throughput: Fast access to data with low response times.
+ Designed for Frequent Access: Best for workloads requiring real-time data access.
+ Automatic Replication: Objects are replicated across multiple Availability Zones for redundancy.
+3.	When to Use an S3 Standard Bucket?
+o	Web Applications & Content Delivery (storing images, videos, and static website assets).
+o	Big Data Analytics (storing logs and real-time data processing).
+o	Data Lake Storage (centralized data storage for analysis).
+o	Cloud-native Applications (serverless and distributed applications).
+o	Backup & Disaster Recovery (instant access to critical data backups).
+4.	Security Features of an S3 Standard Bucket:
+o	Access Control: Private by default, but can be shared via IAM roles and policies.
+o	Bucket Policies: Define rules for who can access or modify data.
+o	Encryption: Supports Server-Side Encryption (SSE) and Client-Side Encryption.
+o	Versioning: Helps track changes and restore previous versions.
+5.	Pricing Considerations for S3 Standard Buckets
+o	Pricing is based on:
+	Storage used (per GB/month).
+	Number of API requests (PUT, GET, LIST, DELETE).
+	Data transfer (outbound data transfer to the internet is charged).
+o	Compared to Standard-IA and Glacier, S3 Standard is costlier but offers faster access.
+Summary:
+A Standard Bucket in Amazon S3 is the default bucket type that provides high durability, availability, and low latency, making it ideal for frequently accessed data in applications, analytics, and backups.
+
+Q3.
+Private Cloud vs. Public Cloud – Key Differences
+1️⃣ Private Cloud
+•	Dedicated to a single organization, providing high security and control.
+•	Can be on-premises (within an organization's data center) or hosted by a third-party provider.
+•	Offers customizable security policies and strict regulatory compliance (ideal for banking, healthcare, government).
+•	Requires high upfront investment for infrastructure, maintenance, and management.
+•	Examples: AWS Virtual Private Cloud (VPC), OpenStack, VMware Cloud.
+2️⃣ Public Cloud
+•	A shared cloud environment managed by third-party providers like AWS, Azure, Google Cloud.
+•	Follows a pay-as-you-go pricing model, making it cost-effective and scalable.
+•	No infrastructure maintenance required from the user’s side.
+•	Ideal for startups, web applications, AI/ML workloads, and big data analytics.
+•	Security is managed by the provider but follows industry best practices.
+
+Q4.
+Difference Between IaaS, PaaS, and SaaS
+Cloud computing is divided into three main service models: Infrastructure as a Service (IaaS), Platform as a Service (PaaS), and Software as a Service (SaaS). Each serves different business needs and offers varying levels of control, scalability, and management.
+1️⃣ Infrastructure as a Service (IaaS)
+•	Provides virtualized computing resources over the internet.
+•	Includes servers, storage, networking, and operating systems.
+•	Users have full control over infrastructure configuration, but they must manage applications and software.
+•	Example: AWS EC2, Google Compute Engine, Microsoft Azure Virtual Machines.
+•	Use Cases: Hosting websites, disaster recovery, big data processing, and application development.
+2️⃣ Platform as a Service (PaaS)
+•	Provides a pre-configured platform for developing, testing, and deploying applications.
+•	Includes operating systems, runtime environments, databases, and development tools.
+•	Developers focus on coding without worrying about infrastructure management.
+•	Example: Google App Engine, AWS Elastic Beanstalk, Microsoft Azure App Services.
+•	Use Cases: Application development, software testing, and automated deployments.
+3️⃣ Software as a Service (SaaS)
+•	Delivers fully managed software applications over the internet.
+•	Users don’t need to install or maintain software—it runs on the provider’s cloud.
+•	Typically accessed via a web browser and follows a subscription-based pricing model.
+•	Example: Google Workspace (Docs, Sheets), Microsoft 365, Dropbox, Zoom.
+•	Use Cases: Email, collaboration tools, CRM (Customer Relationship Management), and online storage.
+
+
+Q5.
+Difference Between Disaster Recovery and Data Center
+Disaster recovery and data centers are both critical aspects of modern IT infrastructure, but they serve distinct purposes and are implemented differently. Here's a breakdown:
+1️⃣ Data Center
+•	Definition: A data center is a physical or virtual facility used to store, manage, and process an organization's data and IT infrastructure. It houses servers, storage systems, networking equipment, and all the resources necessary to support enterprise applications.
+•	Function: Primarily designed to host and maintain data and IT services, ensuring high availability, security, and scalability.
+•	Components: Includes servers, cooling systems, power supply units, network equipment, security systems, and personnel to manage IT operations.
+•	Location: Typically, on-premises or hosted by a third-party provider (e.g., AWS, Google Cloud).
+•	Purpose: Main function is to run the day-to-day operations of the organization’s IT systems and applications.
+2️⃣ Disaster Recovery (DR)
+•	Definition: Disaster recovery refers to a set of policies, tools, and procedures that ensure the restoration of IT systems and data in the event of a disaster (natural disasters, cyber-attacks, hardware failures, etc.).
+•	Function: DR is a backup strategy that helps businesses recover data and operations after a disruption. It ensures business continuity by reducing downtime and data loss.
+•	Components: Includes backup systems, replication, failover systems, and recovery procedures.
+•	Location: Can involve a secondary data center (often geographically distant), cloud storage, or a combination of both.
+•	Purpose: Focused on mitigating risks by creating systems that can restore operations when primary systems fail.
+
+
+Q6
+Advantages of Cloud Computing
+Cloud computing offers a range of benefits that have revolutionized how businesses and individuals manage and access IT resources. Here are the key advantages:
+1. Cost Efficiency
+•	No upfront investment: Cloud services follow a pay-as-you-go model, meaning you only pay for what you use, without the need to invest in physical hardware or maintain expensive infrastructure.
+•	Lower operational costs: Cloud providers handle the infrastructure maintenance, reducing costs related to IT staff and data center management.
+2. Scalability and Flexibility
+•	Cloud platforms allow businesses to scale their resources up or down as needed. Whether it's adding more storage, processing power, or users, scaling happens dynamically without needing to plan for future infrastructure.
+•	Elasticity ensures that businesses can respond to changing demands without overprovisioning resources.
+3. High Availability and Reliability
+•	Cloud services are typically hosted on multiple data centers in different geographic locations, providing redundancy and ensuring high availability. This means that even if one data center experiences issues, the services remain operational.
+•	Cloud providers offer Service Level Agreements (SLAs) that guarantee a certain level of uptime, often 99.99% or higher.
+4. Enhanced Collaboration
+•	Cloud computing allows employees to access applications and data from anywhere, anytime through internet connectivity. This fosters collaboration by enabling real-time editing, communication, and sharing of documents.
+•	Examples include cloud-based tools like Google Workspace, Microsoft 365, and Slack.
+5. Security and Compliance
+•	Leading cloud providers invest heavily in security infrastructure, offering features like encryption, identity management, and firewalls.
+•	Many cloud providers comply with global standards and regulations (e.g., GDPR, HIPAA), making it easier for businesses to meet compliance requirements.
+6. Disaster Recovery and Business Continuity
+•	Cloud computing facilitates automatic backups and disaster recovery solutions. In case of a disaster, businesses can quickly recover data and resume operations, minimizing downtime.
+•	Cloud services also offer geo-redundancy, ensuring that data is replicated across multiple locations to prevent data loss.
+7. Automatic Software Updates and Maintenance
+•	Cloud service providers handle regular software updates and maintenance, ensuring that users always have access to the latest features, bug fixes, and security patches.
+•	This eliminates the need for businesses to manually update software, reducing the risk of security vulnerabilities.
+8. Innovation and Agility
+•	Cloud computing enables businesses to quickly adopt new technologies without significant investment in infrastructure. Technologies like AI, machine learning, and big data can be accessed and integrated via cloud platforms.
+•	Businesses can experiment, innovate, and launch new products or services faster than with traditional on-premises setups.
+9. Global Reach
+•	Cloud computing allows businesses to expand their reach globally by providing access to data and services from virtually any location. This is especially beneficial for international operations or companies with remote teams.
+•	Cloud services also help optimize network latency, improving the performance of applications for users worldwide.
+10. Environmental Benefits
+•	Cloud computing can have a positive environmental impact by optimizing resource usage and reducing energy consumption. Cloud data centers are often more energy-efficient than traditional on-premises data centers.
+•	Leading providers also make investments in sustainable energy sources, contributing to green initiatives.
+
+
+
+Q7
+On-Premises Cloud vs. Public Cloud vs. Private Cloud – Key Differences
+Each cloud model offers a unique set of benefits, suited for different use cases, and involves varying levels of control, management, and cost. Here's a detailed comparison of on-premises cloud, public cloud, and private cloud:
+On-Premises Cloud
+•	Definition: An on-premises cloud refers to IT infrastructure (servers, storage, networking) that is owned, managed, and maintained internally within an organization’s own premises (data center). It is often seen as a private cloud hosted locally.
+•	Control: Complete control over infrastructure, security policies, and data storage. The organization manages and controls everything.
+•	Management: The organization is responsible for setting up, maintaining, and updating the hardware and software. This includes everything from storage management to security configurations.
+•	Costs: High upfront capital expenditure for hardware, software, and maintenance. However, long-term operational costs can be lower if the infrastructure is used effectively.
+•	Examples: In-house data centers or on-premises virtualization solutions using software like VMware or OpenStack.
+Public Cloud
+•	Definition: A public cloud is a cloud infrastructure that is owned and operated by third-party service providers (such as Amazon Web Services (AWS), Microsoft Azure, or Google Cloud). Resources such as compute, storage, and networking are provided over the internet and shared across multiple organizations.
+•	Control: The cloud provider owns and manages the infrastructure, while users access the services via the internet. The end user has no control over the underlying infrastructure.
+•	Management: The provider is responsible for managing and maintaining the cloud infrastructure, including hardware, software, updates, and security.
+•	Costs: Public clouds offer a pay-as-you-go model, meaning businesses only pay for what they use. It's generally more cost-effective for small to medium-sized businesses that don’t want the burden of maintaining infrastructure.
+•	Examples: AWS EC2, Google Cloud, Microsoft Azure.
+Private Cloud
+•	Definition: A private cloud is a cloud environment used exclusively by one organization. It can be hosted on-premises or externally by a third-party provider, but the infrastructure is dedicated solely to that organization.
+•	Control: Provides more control than a public cloud because the organization owns or leases the entire infrastructure and can configure it to meet its specific needs.
+•	Management: The organization either manages the infrastructure internally or outsources it to a cloud provider. Private clouds typically offer customized security policies, stricter access control, and data management tailored to the organization's needs.
+•	Costs: The organization bears the cost of building and maintaining the infrastructure (if on-premises), or it can be hosted externally. The costs are higher than a public cloud but offer greater control and customization.
+•	Examples: VMware Private Cloud, Microsoft Azure Stack, OpenStack (when deployed on-premises).
+
+
+
+Q8
+Distributed System
+A distributed system is a system that consists of multiple independent computers or nodes that work together to achieve a common goal, typically over a network. These nodes can be located in the same physical location or geographically distributed. The key feature of a distributed system is that it allows the computers or nodes to collaborate and function as a unified system, despite being separate entities.
+Key Characteristics of a Distributed System:
+1. Multiple Nodes (Machines)
+•	A distributed system involves more than one physical machine or node that communicates and coordinates with each other.
+•	Each node has its own processor, memory, and storage.
+2. Transparency
+•	Transparency in a distributed system means that users and applications are not aware of the underlying distribution of resources. They should be able to access the system as if it were a single entity.
+o	Location Transparency: Users do not need to know the location of resources.
+o	Replication Transparency: Users are unaware of the replication of data.
+o	Concurrency Transparency: Users do not have to manage multiple processes accessing the system simultaneously.
+o	Failure Transparency: The system should mask failures and continue functioning.
+3. Fault Tolerance
+•	A distributed system should be resilient to failures. If one node fails, the system should continue to function by redistributing work among other available nodes.
+•	Replication and redundancy are key techniques for achieving fault tolerance.
+4. Scalability
+•	Distributed systems can scale by adding more nodes to handle increased load or to expand capacity.
+•	Horizontal scaling (adding more machines) is commonly used in distributed systems.
+5. Concurrency
+•	A distributed system involves multiple processes running simultaneously on different nodes. These processes may need to share data or coordinate actions, and thus, concurrency is an essential feature.
+•	Synchronization is required to handle concurrent access to shared resources.
+6. Communication
+•	Nodes in a distributed system communicate with each other over a network, which could be local (within a building) or global (across data centers or geographies).
+•	Communication is typically done using standard protocols such as TCP/IP, HTTP, or RPC (Remote Procedure Call).
+7. Coordination and Synchronization
+•	Distributed systems need mechanisms to coordinate and synchronize activities across different nodes. This includes managing shared resources, ensuring consistency, and handling mutual exclusion (when multiple nodes try to access the same resource).
+•	Techniques like distributed locks, message passing, and leader election are commonly used for synchronization.
+8. Data Distribution and Replication
+•	Data is often distributed across multiple nodes, and replication is used to ensure data availability and fault tolerance.
+•	Distributed databases, for example, often split data into shards and store them across multiple nodes, with copies (replicas) to prevent data loss.
+Types of Distributed Systems:
+1. Client-Server Systems
+•	In this model, clients request resources or services from a server. The server handles the requests and provides responses.
+•	Example: Web applications, where clients (browsers) request data from servers.
+2. Peer-to-Peer (P2P) Systems
+•	In P2P systems, each node (peer) acts both as a client and a server. Peers communicate directly with each other without a centralized server.
+•	Example: File-sharing networks like BitTorrent.
+3. Cloud Computing Systems
+•	Cloud systems are highly distributed systems that provide on-demand resources (computing power, storage, etc.) over the internet.
+•	Example: Amazon Web Services (AWS), Google Cloud, and Microsoft Azure.
+4. Distributed Databases
+•	A distributed database system involves databases that are spread across multiple locations. The data is distributed, often replicated, across different nodes.
+•	Example: Cassandra, MongoDB, and Google Spanner.
+5. Microservices Architecture
+•	In microservices, applications are broken down into small, independent services that communicate with each other. Each service can be deployed, scaled, and updated independently.
+•	Example: An online shopping application where the user authentication, payment processing, and product catalog services are all separate services running on different machines.
+Challenges in Distributed Systems:
+1. Network Latency and Bandwidth
+•	The communication between nodes in a distributed system can suffer from network latency (delay in communication) and limited bandwidth. This can impact performance, especially in large-scale systems.
+2. Consistency and Concurrency Control
+•	Maintaining data consistency (e.g., in replicated databases) is a key challenge, especially when different nodes may update the same data at the same time.
+•	Distributed systems often face the CAP Theorem challenge: balancing Consistency, Availability, and Partition Tolerance.
+3. Security
+•	In distributed systems, securing communication and data across multiple nodes is complex. Encryption, access control, and authentication are critical.
+4. Fault Detection and Recovery
+•	Detecting and recovering from failures in a distributed system is challenging. Systems must be designed to detect when nodes fail and take appropriate actions to recover.
+Applications of Distributed Systems:
+•	Cloud Computing: Public and private clouds are essentially large-scale distributed systems.
+•	Content Delivery Networks (CDNs): Distributed systems used to deliver content efficiently across a wide geographical area.
+•	Big Data Processing: Systems like Hadoop and Spark distribute the processing of large data sets across many nodes.
+•	Blockchain: A decentralized and distributed ledger technology used in cryptocurrencies like Bitcoin.
+
+Q9
+What is Cloud Computing?
+Cloud computing refers to the delivery of computing services like storage, processing power, databases, networking, software, and more over the internet (the "cloud"). Instead of owning and maintaining physical servers or data centers, businesses and individuals can use cloud services provided by companies such as Amazon Web Services (AWS), Microsoft Azure, and Google Cloud. These services allow users to access resources on-demand and pay only for what they use.
+Key Characteristics of Cloud Computing:
+1. On-Demand Self-Service
+•	Users can access and manage cloud services on their own, without the need for manual intervention from service providers. This includes services like virtual machines, storage, and software applications.
+2. Broad Network Access
+•	Cloud services are available over the internet, enabling access from various devices such as laptops, smartphones, and tablets, regardless of location.
+3. Resource Pooling
+•	Cloud providers pool resources (computing, storage, etc.) to serve multiple customers. These resources are dynamically assigned and reassigned according to demand.
+4. Rapid Elasticity
+•	Cloud resources can be scaled up or down quickly based on usage. This means users can easily adjust their services to meet changing demands without upfront costs or long setup times.
+5. Measured Service (Pay-as-You-Go)
+•	Cloud services typically follow a pay-as-you-go model, where users are billed based on their usage of resources, such as storage space or computing power. This allows for cost efficiency and eliminates the need for large upfront investments in hardware.
+Types of Cloud Computing Services:
+Cloud computing can be categorized based on the type of services offered:
+1. Infrastructure as a Service (IaaS)
+•	IaaS provides basic computing infrastructure such as virtual machines, storage, and networking. Users can rent computing resources and scale them based on their needs.
+•	Example: Amazon EC2, Google Compute Engine, Microsoft Azure Virtual Machines.
+2. Platform as a Service (PaaS)
+•	PaaS provides a platform that allows developers to build, deploy, and manage applications without worrying about the underlying infrastructure (servers, storage, etc.).
+•	It includes tools for development, database management, and application hosting.
+•	Example: Google App Engine, Microsoft Azure App Services, Heroku.
+3. Software as a Service (SaaS)
+•	SaaS provides ready-to-use software applications over the cloud. Users access these applications through a web browser and don't need to install or manage them on their devices.
+•	Examples include Google Workspace, Microsoft 365, Dropbox, and Salesforce.
+Deployment Models of Cloud Computing:
+Cloud computing can also be categorized based on the way the cloud infrastructure is deployed:
+1. Public Cloud
+•	In a public cloud, cloud services are owned and operated by a third-party provider and shared among multiple customers (tenants). Resources like servers and storage are provided over the internet.
+•	Example: AWS, Google Cloud, Microsoft Azure.
+2. Private Cloud
+•	A private cloud is used exclusively by a single organization. It can be hosted either internally (on-premises) or externally by a third-party provider. This model offers greater control and security.
+•	Example: VMware Private Cloud, Microsoft Azure Stack.
+3. Hybrid Cloud
+•	A hybrid cloud combines both public and private clouds. It allows data and applications to be shared between them, providing more flexibility and optimization of existing infrastructure.
+•	Example: Using AWS for general-purpose workloads and maintaining sensitive data on a private cloud.
+4. Community Cloud
+•	A community cloud is shared by several organizations with similar interests or needs. It is often used by industries with specific regulatory or compliance requirements.
+•	Example: A cloud platform used by multiple healthcare organizations to meet HIPAA compliance.
+Advantages of Cloud Computing:
+1. Cost-Efficiency
+•	Pay-as-you-go model means businesses only pay for what they use, reducing the need for expensive hardware and infrastructure investments.
+•	Cloud computing eliminates maintenance and operational costs associated with managing physical servers.
+2. Scalability
+•	Cloud resources can scale quickly to accommodate growing workloads or reduced in response to lower demand. This flexibility ensures businesses only pay for the resources they need at any given time.
+3. Flexibility and Accessibility
+•	Cloud services can be accessed from anywhere with an internet connection, making them ideal for remote work, collaboration, and global teams.
+4. Reliability
+•	Leading cloud providers offer high availability, with data centers and backup systems distributed across multiple regions. This ensures that services are available even in case of failure at a single data center.
+5. Security
+•	Cloud providers invest in advanced security measures like encryption, authentication, and compliance with regulations such as GDPR and HIPAA, ensuring that data is well-protected.
+6. Automatic Updates and Maintenance
+•	Cloud providers handle software updates, security patches, and hardware maintenance, reducing the burden on IT teams and ensuring systems are always up to date.
+Applications of Cloud Computing:
+•	Data Storage: Google Drive, Dropbox, Amazon S3.
+•	Web Hosting: AWS, Microsoft Azure, Google Cloud.
+•	Software Development: Platforms for application development and deployment such as Heroku and AWS Elastic Beanstalk.
+•	Data Analytics: Cloud-based analytics tools like Google BigQuery or AWS Redshift for big data processing and analysis.
+•	Collaboration Tools: Cloud-based services like Microsoft Teams, Slack, and Google Workspace.
+Challenges of Cloud Computing:
+•	Security: While cloud providers offer robust security features, organizations must still ensure that their data is adequately protected, especially in shared environments.
+•	Downtime: Dependence on the internet and external service providers may lead to downtime or service interruptions.
+•	Compliance: Ensuring that data storage and processing comply with various laws and regulations can be challenging, especially when data is stored in different jurisdictions.
 
-# Load datasets
-def load_data():
-    (x_train_mnist, y_train_mnist), (x_test_mnist, y_test_mnist) = mnist.load_data()
-    (x_train_fashion, y_train_fashion), (x_test_fashion, y_test_fashion) = fashion_mnist.load_data()
-    (x_train_cifar, y_train_cifar), (x_test_cifar, y_test_cifar) = cifar10.load_data()
-    
-    x_train_mnist, x_test_mnist = x_train_mnist / 255.0, x_test_mnist / 255.0
-    x_train_fashion, x_test_fashion = x_train_fashion / 255.0, x_test_fashion / 255.0
-    x_train_cifar, x_test_cifar = x_train_cifar / 255.0, x_test_cifar / 255.0
-    
-    return (x_train_mnist, y_train_mnist, x_test_mnist, y_test_mnist), \
-           (x_train_fashion, y_train_fashion, x_test_fashion, y_test_fashion), \
-           (x_train_cifar, y_train_cifar, x_test_cifar, y_test_cifar)
 
-# Define Simple Neural Network
-def create_simple_nn(input_shape, num_classes):
-    model = keras.Sequential([
-        layers.Flatten(input_shape=input_shape),
-        layers.Dense(128, activation='relu'),
-        layers.Dense(num_classes, activation='softmax')
-    ])
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    return model
-
-# Train and evaluate models
-def train_and_evaluate_model(dataset, dataset_name):
-    x_train, y_train, x_test, y_test = dataset
-    model = create_simple_nn(x_train.shape[1:], len(np.unique(y_train)))
-    history = model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test), verbose=2)
-    test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
-    print(f'Accuracy on {dataset_name}: {test_acc:.4f}')
-    plot_training_history(history, dataset_name)
-    return model, x_test, y_test
-
-# Plot training history
-def plot_training_history(history, dataset_name):
-    plt.figure(figsize=(12, 4))
-    
-    # Accuracy plot
-    plt.subplot(1, 2, 1)
-    plt.plot(history.history['accuracy'], label='Train Accuracy')
-    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.legend()
-    plt.title(f'{dataset_name} - Accuracy')
-    
-    # Loss plot
-    plt.subplot(1, 2, 2)
-    plt.plot(history.history['loss'], label='Train Loss')
-    plt.plot(history.history['val_loss'], label='Validation Loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.legend()
-    plt.title(f'{dataset_name} - Loss')
-    
-    plt.show()
-
-# Load datasets
-datasets = load_data()
-dataset_names = ["MNIST", "Fashion MNIST", "CIFAR-10"]
-models = []
-
-# Train models on all datasets
-for dataset, name in zip(datasets, dataset_names):
-    model, x_test, y_test = train_and_evaluate_model(dataset, name)
-    models.append((model, x_test, y_test))
-
-# Option A: Adding Dropout Layer
-def create_nn_with_dropout(input_shape, num_classes):
-    model = keras.Sequential([
-        layers.Flatten(input_shape=input_shape),
-        layers.Dense(128, activation='relu'),
-        layers.Dropout(0.5),  # Dropout layer added
-        layers.Dense(num_classes, activation='softmax')
-    ])
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    return model
-
-# Train and compare dropout model on MNIST
-print("\nTraining model with Dropout on MNIST...")
-dropout_model = create_nn_with_dropout(datasets[0][0].shape[1:], 10)
-history_dropout = dropout_model.fit(datasets[0][0], datasets[0][1], epochs=5, verbose=2, validation_data=(datasets[0][2], datasets[0][3]))
-dropout_acc = dropout_model.evaluate(datasets[0][2], datasets[0][3], verbose=0)[1]
-print(f'Accuracy with Dropout on MNIST: {dropout_acc:.4f}')
-plot_training_history(history_dropout, "MNIST with Dropout")
-
-# Option B: Model Evaluation Metrics
-def evaluate_model_metrics(model, x_test, y_test):
-    y_pred = np.argmax(model.predict(x_test), axis=1)
-    accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred, average='weighted')
-    recall = recall_score(y_test, y_pred, average='weighted')
-    f1 = f1_score(y_test, y_pred, average='weighted')
-    
-    print(f'Accuracy: {accuracy:.4f}')
-    print(f'Precision: {precision:.4f}')
-    print(f'Recall: {recall:.4f}')
-    print(f'F1 Score: {f1:.4f}')
-
-print("\nEvaluating Model Metrics on MNIST...")
-evaluate_model_metrics(models[0][0], models[0][1], models[0][2])
-
-# Save and reload model
-models[0][0].save("mnist_model.h5")
-reloaded_model = keras.models.load_model("mnist_model.h5")
-print("Reloaded model successfully!")
-
-
-------------------------------------------------------------------------------------------------
-
-
-
-
-#Q1
-# Import necessary libraries
-import tensorflow as tf
-from tensorflow import keras
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Step 1: Load the MNIST dataset
-(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-
-# Step 2: Preprocess the data
-x_train, x_test = x_train / 255.0, x_test / 255.0  # Normalize pixel values
-x_train = x_train.reshape(-1, 784)  # Flatten images
-x_test = x_test.reshape(-1, 784)
-
-# Step 3: Define a simple ANN model
-model = keras.Sequential([
-    keras.layers.Dense(128, activation='relu', input_shape=(784,)),  # Hidden layer
-    keras.layers.Dense(10, activation='softmax')  # Output layer
-])
-
-# Step 4: Compile the model
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-
-# Step 5: Train the model
-history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
-
-# Step 6: Evaluate the model on the test set
-test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
-
-# Print the test accuracy
-print(f"Test Accuracy: {test_acc:.4f}")
- 
- 
- 
- 
- 
- # Function to create a model (with or without dropout)
-def create_model(use_dropout=False):
-    model = keras.Sequential()
-    model.add(keras.layers.Dense(128, activation='relu', input_shape=(784,)))  # Hidden layer
-    if use_dropout:
-        model.add(keras.layers.Dropout(0.2))  # Apply Dropout if specified
-    model.add(keras.layers.Dense(10, activation='softmax'))  # Output layer
-
-    model.compile(optimizer='adam',
-                  loss='sparse_categorical_crossentropy',
-                  metrics=['accuracy'])
-    return model
-
-# Train the model WITHOUT dropout
-model_no_dropout = create_model(use_dropout=False)
-history_no_dropout = model_no_dropout.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
-
-# Train the model WITH dropout
-model_with_dropout = create_model(use_dropout=True)
-history_with_dropout = model_with_dropout.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
-
-# Evaluate both models on test data
-test_loss_no_dropout, test_acc_no_dropout = model_no_dropout.evaluate(x_test, y_test, verbose=2)
-test_loss_with_dropout, test_acc_with_dropout = model_with_dropout.evaluate(x_test, y_test, verbose=2)
-
-# Print comparison of test accuracy
-print(f"Test Accuracy WITHOUT Dropout: {test_acc_no_dropout:.4f}")
-print(f"Test Accuracy WITH Dropout (0.2): {test_acc_with_dropout:.4f}")
-
-# Plot accuracy comparison
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(12, 4))
-
-# Accuracy comparison plot
-plt.subplot(1, 2, 1)
-plt.plot(history_no_dropout.history['val_accuracy'], label='No Dropout')
-plt.plot(history_with_dropout.history['val_accuracy'], label='With Dropout')
-plt.xlabel('Epochs')
-plt.ylabel('Test Accuracy')
-plt.legend()
-plt.title('Test Accuracy Comparison')
-
-# Loss comparison plot
-plt.subplot(1, 2, 2)
-plt.plot(history_no_dropout.history['val_loss'], label='No Dropout')
-plt.plot(history_with_dropout.history['val_loss'], label='With Dropout')
-plt.xlabel('Epochs')
-plt.ylabel('Test Loss')
-plt.legend()
-plt.title('Test Loss Comparison')
-
-plt.show()
-
-#(Test Accuracy:
-
-#The model with dropout (98.03%) performs slightly better than the model without dropout (97.91%).
-#Dropout helps prevent overfitting, which may have improved generalization.
-
-#Loss:
-
-#The lower loss (0.0681) for the dropout model indicates better optimization.
-
-#A higher loss (0.0739) in the non-dropout model suggests possible overfitting.)
-
-#Q1 2 - b
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-import joblib
-
-# Step 1: Train the model (using previous trained model)
-model = keras.Sequential([
-    keras.layers.Dense(128, activation='relu', input_shape=(784,)),  # Hidden layer
-    keras.layers.Dense(10, activation='softmax')  # Output layer
-])
-
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-
-model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
-
-# Step 2: Make predictions
-y_pred = model.predict(x_test)
-y_pred_classes = np.argmax(y_pred, axis=1)  # Convert probabilities to class labels
-
-# Step 3: Compute accuracy, precision, recall, and F1-score
-accuracy = accuracy_score(y_test, y_pred_classes)
-precision = precision_score(y_test, y_pred_classes, average='weighted')
-recall = recall_score(y_test, y_pred_classes, average='weighted')
-f1 = f1_score(y_test, y_pred_classes, average='weighted')
-
-
-
-
-
-# Print the metrics in a structured format
-print("="*40)
-print("|   Metric      |   Value    |")
-print("="*40)
-print(f"| Accuracy      |   {accuracy:.4f}   |")
-print(f"| Precision     |   {precision:.4f}   |")
-print(f"| Recall        |   {recall:.4f}   |")
-print(f"| F1 Score      |   {f1:.4f}   |")
-print("="*40)
-
-
-
-
-
-#Accuracy (97.93%): The model correctly predicts the digit in 97.93% of test cases.
-
-#Precision (97.94%): When the model predicts a digit, 97.94% of those predictions are correct.
-
-#Recall (97.93%): The model correctly identifies 97.93% of all actual digits.
-
-#F1 Score (97.93%): A balanced measure confirming high precision and recal
-
-
----------------------------------------------------------------------------------------------------------
-
-
-
-# Build CNN Model for Image Classification
-def create_cnn_model(input_shape, num_classes):
-    model = keras.Sequential([
-        layers.Conv2D(32, (3,3), activation='relu', input_shape=input_shape),
-        layers.MaxPooling2D((2,2)),
-        layers.Conv2D(64, (3,3), activation='relu'),
-        layers.MaxPooling2D((2,2)),
-        layers.Conv2D(128, (3,3), activation='relu'),
-        layers.MaxPooling2D((2,2)),
-        layers.Flatten(),
-        layers.Dense(128, activation='relu'),
-        layers.Dense(num_classes, activation='softmax')
-    ])
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    return model
-
-# CNN Model for Flowers dataset
-print("\nBuilding CNN Model for Oxford-IIIT Pets...")
-(x_train_pets, y_train_pets), (x_test_pets, y_test_pets) = tf.keras.datasets.cifar10.load_data()
-cnn_model = create_cnn_model((32, 32, 3), 10)
-cnn_model.fit(x_train_pets, y_train_pets, epochs=5, validation_data=(x_test_pets, y_test_pets), verbose=2)
-
-# Hyperparameter Tuning on IRIS
-def tune_hyperparameters():
-    from sklearn.model_selection import GridSearchCV
-    from sklearn.svm import SVC
-    from sklearn.datasets import load_iris
-
-    iris = load_iris()
-    X, y = iris.data, iris.target
-    params = {'C': [0.1, 1, 10], 'gamma': [0.001, 0.01, 0.1]}
-    grid = GridSearchCV(SVC(), params, cv=3)
-    grid.fit(X, y)
-    print(f'Best Params: {grid.best_params_}')
-
-tune_hyperparameters()
-
-
-
-------------------------------------------------------------------------------------------------------------------------
-#Q2 : CNN (Ooxford IIIT Pets)
-
-
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-from tensorflow.keras.preprocessing import image_dataset_from_directory
-from sklearn.model_selection import GridSearchCV
-from sklearn.svm import SVC
-from sklearn.datasets import load_iris
-import tensorflow_datasets as tfds
-
-# Load Oxford-IIIT Pets dataset from TensorFlow Datasets
-def load_pets_data(batch_size=32, img_size=(128, 128)):
-    dataset_name = "oxford_iiit_pet"
-    dataset, info = tfds.load(dataset_name, split='train', as_supervised=True, with_info=True)
-    
-    # Resize images to a consistent size
-    def resize_image(image, label):
-        image = tf.image.resize(image, img_size)
-        return image, label
-    
-    dataset = dataset.map(resize_image)  # Apply resize function to the dataset
-    return dataset
-
-# Define CNN Model for Image Classification
-def create_cnn_model(input_shape, num_classes):
-    model = keras.Sequential([
-        layers.Conv2D(32, (3,3), activation='relu', input_shape=input_shape),
-        layers.MaxPooling2D((2,2)),
-        layers.Conv2D(64, (3,3), activation='relu'),
-        layers.MaxPooling2D((2,2)),
-        layers.Conv2D(128, (3,3), activation='relu'),
-        layers.MaxPooling2D((2,2)),
-        layers.Flatten(),
-        layers.Dense(128, activation='relu'),
-        layers.Dense(num_classes, activation='softmax')
-    ])
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    return model
-
-# Train CNN Model on Oxford-IIIT Pets dataset
-print("\nBuilding CNN Model for Oxford-IIIT Pets...")
-train_dataset = load_pets_data()
-cnn_model = create_cnn_model((128, 128, 3), 37)  # 37 classes in Oxford-IIIT Pets dataset
-history_cnn = cnn_model.fit(train_dataset.batch(32), epochs=10, verbose=2)
-
-def plot_cnn_training(history):
-    plt.figure(figsize=(12, 4))
-    
-    # Accuracy plot
-    plt.subplot(1, 2, 1)
-    plt.plot(history.history['accuracy'], label='Train Accuracy')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.legend()
-    plt.title('CNN Model - Accuracy')
-    
-    # Loss plot
-    plt.subplot(1, 2, 2)
-    plt.plot(history.history['loss'], label='Train Loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.legend()
-    plt.title('CNN Model - Loss')
-    
-    plt.show()
-
-plot_cnn_training(history_cnn)
-
-
-
----------------------------------------------------------------------------------------------------------------
-# Q2 CNN (tf_Flowers)
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-import tensorflow_datasets as tfds
-
-# Load TensorFlow Flowers dataset from TensorFlow Datasets
-def load_flowers_data(batch_size=32, img_size=(128, 128)):
-    dataset_name = "tf_flowers"
-    (train_dataset, test_dataset), info = tfds.load(dataset_name, 
-                                                     as_supervised=True, 
-                                                     with_info=True, 
-                                                     split=["train[:80%]", "train[80%:]"])
-    return train_dataset, test_dataset
-
-# Define CNN Model for Image Classification
-def create_cnn_model(input_shape, num_classes):
-    model = keras.Sequential([
-        layers.Conv2D(32, (3,3), activation='relu', input_shape=input_shape),
-        layers.MaxPooling2D((2,2)),
-        layers.Conv2D(64, (3,3), activation='relu'),
-        layers.MaxPooling2D((2,2)),
-        layers.Conv2D(128, (3,3), activation='relu'),
-        layers.MaxPooling2D((2,2)),
-        layers.Flatten(),
-        layers.Dense(128, activation='relu'),
-        layers.Dense(num_classes, activation='softmax')
-    ])
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    return model
-
-# Train CNN Model on TensorFlow Flowers dataset
-print("\nBuilding CNN Model for TensorFlow Flowers...")
-train_dataset, test_dataset = load_flowers_data()
-cnn_model = create_cnn_model((128, 128, 3), 5)  # 5 classes in TensorFlow Flowers dataset
-history_cnn = cnn_model.fit(train_dataset.batch(32), epochs=10, validation_data=test_dataset.batch(32), verbose=2)
-
-def plot_cnn_training(history):
-    plt.figure(figsize=(12, 4))
-    
-    # Accuracy plot
-    plt.subplot(1, 2, 1)
-    plt.plot(history.history['accuracy'], label='Train Accuracy')
-    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.legend()
-    plt.title('CNN Model - Accuracy')
-    
-    # Loss plot
-    plt.subplot(1, 2, 2)
-    plt.plot(history.history['loss'], label='Train Loss')
-    plt.plot(history.history['val_loss'], label='Validation Loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.legend()
-    plt.title('CNN Model - Loss')
-    
-    plt.show()
-
-plot_cnn_training(history_cnn)
-
-
-
-------------------------------------------------------------------------------------------------------------------
-
-Q2 : Hyperparameter tunning
-
-# Hyperparameter Tuning on IRIS with EDA and Confusion Matrix
-import pandas as pd
-import seaborn as sns 
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix # Import confusion_matrix
-
-def tune_hyperparameters():
-    iris = load_iris()
-    X, y = iris.data, iris.target
-    iris_df = pd.DataFrame(X, columns=iris.feature_names)
-    iris_df['target'] = y
-    
-    # EDA
-    print("Dataset Head:")
-    print(iris_df.head())
-    print("\nSummary Statistics:")
-    print(iris_df.describe())
-    print("\nClass Distribution:")
-    print(iris_df['target'].value_counts())
-    
-    # Pairplot
-    sns.pairplot(iris_df, hue='target', palette='husl')
-    plt.show()
-    
-    # Hyperparameter tuning
-    params = {'C': [0.1, 1, 10], 'gamma': [0.001, 0.01, 0.1]}
-    grid = GridSearchCV(SVC(), params, cv=3)
-    grid.fit(X, y)
-    print(f'Best Params: {grid.best_params_}')
-    
-    # Model evaluation
-    best_model = grid.best_estimator_
-    y_pred = best_model.predict(X)
-    acc = accuracy_score(y, y_pred)
-    prec = precision_score(y, y_pred, average='macro')
-    rec = recall_score(y, y_pred, average='macro')
-    f1 = f1_score(y, y_pred, average='macro')
-    
-    print(f'Accuracy: {acc:.4f}, Precision: {prec:.4f}, Recall: {rec:.4f}, F1-score: {f1:.4f}')
-    
-    # Confusion Matrix
-    cm = confusion_matrix(y, y_pred)
-    plt.figure(figsize=(6, 4))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
-    plt.title('Confusion Matrix')
-    plt.show()
-
-tune_hyperparameters()
-      
